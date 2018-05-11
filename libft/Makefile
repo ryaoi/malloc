@@ -6,7 +6,7 @@
 #    By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/03 14:11:33 by ryaoi             #+#    #+#              #
-#    Updated: 2018/05/08 15:38:11 by ryaoi            ###   ########.fr        #
+#    Updated: 2018/05/11 17:21:33 by ryaoi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ SRC		= ./ft_bzero.c \
 			./ft_putchar_fd.c \
 			./ft_putstr_fd.c \
 			./ft_putnbr.c \
-			./ft_strlen.c
+			./ft_strlen.c \
+			./ft_memcpy.c
 
 OBJ		= $(SRC:.c=.o)
 

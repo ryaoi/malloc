@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 15:14:00 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/08 21:31:56 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/11 18:05:38 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,13 @@ typedef struct 	map_s
 	size_t		large_count;
 }				t_map;
 
+void		ft_free(void *ptr);
 void		*ft_malloc(size_t size);
+void        *ft_realloc(void *ptr, size_t size);
 void		show_alloc_mem(void);
 int			mm_init(void);
-	
+void		*next_block(void *ptr);
+void		*prev_block(void *ptr);
+void		create_block(void *ptr, size_t size);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 19:26:06 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/08 21:31:20 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/11 18:22:10 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,33 @@ static void ft_print_address(void *ptr, int newline)
 
 static void ft_show_block(void *start_ptr, int mode, size_t counter)
 {
-	void *ptr;
-	
-	ptr = start_ptr;
+	void 	*ptr;
+	size_t	align;
+
 	if (mode == 1)
+		ptr = start_ptr + OVERHEAD; // cest pour sauter le 0 (le debut de malloc)
+	else
+		ptr = start_ptr;
+	while (counter > 0)
 	{
-		while (counter > 0)
+		if (((t_blockheader *)(ptr))->allocated == 1)
 		{
 			ft_print_address(ptr + sizeof(t_blockheader), 0);
 			ft_putstr_fd(" - ", 1);
-			ft_print_address(ptr + sizeof(t_blockheader) + ((t_blockheader *)(ptr))->size, 0);
+			ft_print_address(ptr + ((t_blockheader *)(ptr))->size + sizeof(t_blockheader), 0);
 			ft_putstr(" : ");
 			ft_putnbr(((t_blockheader *)(ptr))->size);
 			ft_putstr(" Bytes\n");
-			ptr += ((t_blockheader *)(ptr))->size + OVERHEAD;
-			counter--;
 		}
+		if (mode == 1)
+			ptr += ((t_blockheader *)(ptr))->size + OVERHEAD;
+		else
+		{
+			align = (((((t_blockheader *)(ptr))->size + OVERHEAD)\
+				+ (g_map.page_size - 1)) & ~ (g_map.page_size - 1));
+			ptr += align;
+		}
+		counter--;
 	}
 }
 
@@ -57,4 +68,5 @@ void show_alloc_mem()
 	ft_show_block(g_map.small, 1, g_map.small_count);
 	ft_putstr("LARGE : ");
 	ft_print_address(g_map.large, 1);
+	ft_show_block(g_map.large, 2, g_map.large_count);
 }
