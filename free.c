@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:36:04 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/11 17:14:20 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/12 18:11:20 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,11 @@ void		ft_free(void *ptr)
 	printf("[prev]size:%d\tallocated:%zu\n[next]size:%d\tallocated:%zu\n", ((t_blockheader *)(prev_b))->size, ((t_blockheader *)(prev_b))->allocated, ((t_blockheader *)(next_b))->size, ((t_blockheader *)(next_b))->allocated);
 	if (((t_blockheader *)(prev_b))->allocated == 0 \
 	&& ((t_blockheader *)(next_b))->allocated == 0)
-	{
-		printf("merge double!\n");
 		ft_merge_double(header_ptr);
-	}
 	else if (((t_blockheader *)(prev_b))->allocated == 1 \
 	&& ((t_blockheader *)(next_b))->allocated == 0 && ((t_blockheader *)(next_b))->size != 0)
-	{
-		printf("merge with next block!\n");
 		ft_merge_next(header_ptr);
-	}
 	else if (((t_blockheader *)(prev_b))->allocated == 0 \
 	&& ((t_blockheader *)(next_b))->allocated == 1  && ((t_blockheader *)(prev_b))->size != 0)
-	{
-		printf("merge with prev block!\n");
 		ft_merge_prev(header_ptr);
-	}
-	else
-	{
-		printf("just put it to 0\n");
-	}
-	printf("end free!\n");
 }

@@ -6,13 +6,14 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 17:00:13 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/11 18:39:38 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/12 18:53:01 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-t_map 		g_map = {NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0}; 
+t_map 			g_map = {NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0};
+pthread_mutex_t lock;
 
 int mm_init()
 {
@@ -86,7 +87,6 @@ void        *largalloc(size_t new_size)
 	if (g_map.large == NULL)
 	{
 		g_map.large = mmap(0, align, FLAG_PROT, FLAG_MAP,-1, 0);
-		// printf("map.large:%llx\n", g_map.large);
 		if (g_map.large == MAP_FAILED)
 			return(NULL);
 		ret_addr = g_map.large + sizeof(t_blockheader);
@@ -121,12 +121,14 @@ void		*find_non_allocated_space(size_t size)
 	size_t	counter;
 	void	*ptr;
 
-	// printf("find_non_allocated_space!\n");
-	ptr = g_map.tiny + OVERHEAD; //saute les 0
-	counter = g_map.tiny_count;
-	if (size <= SMALL && (counter = g_map.small_count))
+	if (size <= TINY)
 	{
-		ptr = g_map.small + OVERHEAD; //saute les 0
+		ptr = g_map.tiny + OVERHEAD;
+		counter = g_map.tiny_count;
+	}
+	else if (size <= SMALL)
+	{
+		ptr = g_map.small + OVERHEAD;
 		counter = g_map.small_count;
 	}
 	else
@@ -138,10 +140,9 @@ void		*find_non_allocated_space(size_t size)
 	{
 		if (((t_blockheader *)(ptr))->allocated == 0 \
 			&& (size == ((t_blockheader *)(ptr))->size \
-			|| size > ((t_blockheader *)(ptr))->size) + OVERHEAD*2)
+			|| (size < ((t_blockheader *)(ptr))->size - OVERHEAD*2)))
 		{
 			create_block(ptr, size);
-			printf("return a free block:%d\n", ((t_blockheader *)(ptr))->size);
 			return (ptr + sizeof(t_blockheader));
 		}
 		ptr = next_block(ptr);
@@ -155,6 +156,7 @@ void		*ft_malloc(size_t size)
 {
 	void	*ret_ptr;
 
+	pthread_mutex_lock(&lock);
 	ret_ptr = NULL;
 	if (g_map.page_size == 0)
     {
@@ -162,11 +164,16 @@ void		*ft_malloc(size_t size)
 			return (NULL);
     }
     if ((ret_ptr = find_non_allocated_space(size)))
+	{
+		pthread_mutex_unlock(&lock);
         return(ret_ptr);
+	}
 	if (size <= TINY && g_map.small_size > size)
-        return((void *)extend(size, g_map.extend_tiny, 1));
+        ret_ptr = extend(size, g_map.extend_tiny, 1);
     else if (size <= SMALL && g_map.tiny_size > size)
-        return((void *)extend(size, g_map.extend_small, 2));
+        ret_ptr = extend(size, g_map.extend_small, 2);
     else
-        return(largalloc(size));
+        ret_ptr = largalloc(size);
+	pthread_mutex_unlock(&lock);
+	return (ret_ptr);	
 }

@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 17:16:01 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/11 19:14:56 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/12 17:55:47 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,29 +27,19 @@ void			*ft_realloc(void *ptr, size_t size)
 	if (ptr == NULL)
 		return (ft_malloc(size));
 	header_ptr = ptr - sizeof(t_blockheader);
-	printf("ptr:%llx\theader:%llx\n", ptr, header_ptr);
-	printf("ptr:%zu\n", ((t_blockheader *)(header_ptr))->allocated);
 	((t_blockheader *)(header_ptr))->allocated = 0;
+	printf("old_size:%zu\n", ((t_blockheader *)(header_ptr))->size);
 	if ((ret_ptr = find_non_allocated_space(size)))
 	{
-		printf("found a chunk!\n");
 		ft_memcpy(ret_ptr, ptr, ((t_blockheader *)(header_ptr))->size);
 		return (ret_ptr);
 	}
-	printf("[memcpy]ret_ptr:%llx\tptr:%llx\n", ret_ptr, ptr);
-	printf("extend!\n");
 	if (size <= TINY && g_map.small_size > size)
-	{
 		ret_ptr = (void *)extend(size, g_map.extend_tiny, 1);
-	}
 	else if (size <= SMALL && g_map.tiny_size > size)
-	{
 		ret_ptr = (void *)extend(size, g_map.extend_small, 2);
-	}
 	else
 		ret_ptr = (void *)largalloc(size);
-	printf("[memcpy]ret_ptr:%llx\tptr:%llx\n", ret_ptr, ptr);
-	ret_ptr = ft_memcpy(0x100000000 + ret_ptr, ptr, ((t_blockheader *)(header_ptr))->size);
-	printf("really!!\n");
+	ret_ptr = ft_memcpy(ret_ptr, ptr, ((t_blockheader *)(header_ptr))->size);
 	return (ret_ptr);
 }
