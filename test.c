@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 16:32:31 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/12 18:57:34 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/12 21:57:39 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int main()
 
     show_alloc_mem_ex();
     // test1 = ft_realloc(test1, 30);
-    ft_malloc(50);
+    ft_malloc(500);
     char *test3 = ft_malloc(120);
     ft_free(test3);
     char *test4 = ft_malloc(10);

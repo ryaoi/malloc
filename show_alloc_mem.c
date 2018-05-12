@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 19:26:06 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/12 18:46:49 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/12 21:29:39 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ static void	ft_print_range(void *ptr, int ex)
 		ft_putnbr(((t_blockheader *)(ptr))->size);
 		ft_putstr(" Bytes\n");	
 	}
+	if (ex)
+		ft_hexdump(ptr, ((t_blockheader *)(ptr))->size);
 }
 static void ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
 {

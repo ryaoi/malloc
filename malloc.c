@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 17:00:13 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/12 18:53:01 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/12 19:43:26 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,12 @@ int mm_init()
     g_map.small = mmap(0, SMALL*OVERHEAD*page_size,FLAG_PROT, FLAG_MAP,-1, 0);
     if (g_map.small == MAP_FAILED || g_map.tiny == MAP_FAILED)
         return (-1);
-    // printf("map.tiny:%llx\n", g_map.tiny);
-    // printf("map.small:%llx\n", g_map.small);
     ((t_blockheader *)(g_map.tiny))->size = 0;
     ((t_blockheader *)(g_map.tiny))->allocated = 1;
     ((t_blockfooter *)(g_map.tiny + sizeof(t_blockheader)))->size = 0;
     ((t_blockheader *)(g_map.small))->size = 0;
     ((t_blockheader *)(g_map.small))->allocated = 1;
     ((t_blockfooter *)(g_map.small + sizeof(t_blockheader)))->size = 0;
-    // printf("finished initializing the head!\n");
     g_map.tiny_size = TINY*OVERHEAD*page_size - OVERHEAD;
     g_map.small_size = SMALL*OVERHEAD*page_size - OVERHEAD;
     g_map.extend_tiny = OVERHEAD + g_map.tiny;
