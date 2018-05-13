@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:36:04 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/12 18:11:20 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/13 19:37:23 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,9 @@ void		ft_free(void *ptr)
 	if (ptr == NULL)
 		return ;
 	header_ptr = ptr - sizeof(t_blockheader);
-	printf("free![%llx]size:%zu|allocated:%zu\n", ptr, ((t_blockheader *)(header_ptr))->size,((t_blockheader *)(header_ptr))->allocated);
 	((t_blockheader *)(header_ptr))->allocated = 0;
 	next_b = next_block(header_ptr);
 	prev_b = prev_block(header_ptr);
-	printf("[prev]size:%d\tallocated:%zu\n[next]size:%d\tallocated:%zu\n", ((t_blockheader *)(prev_b))->size, ((t_blockheader *)(prev_b))->allocated, ((t_blockheader *)(next_b))->size, ((t_blockheader *)(next_b))->allocated);
 	if (((t_blockheader *)(prev_b))->allocated == 0 \
 	&& ((t_blockheader *)(next_b))->allocated == 0)
 		ft_merge_double(header_ptr);

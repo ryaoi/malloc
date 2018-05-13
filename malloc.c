@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 17:00:13 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/12 19:43:26 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/13 19:39:08 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,43 +15,22 @@
 t_map 			g_map = {NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0};
 pthread_mutex_t lock;
 
-int mm_init()
-{
-    size_t page_size;
-
-    page_size = getpagesize();
-    g_map.page_size = page_size;
-    g_map.tiny = mmap(0, TINY*OVERHEAD*page_size,FLAG_PROT, FLAG_MAP,-1, 0);
-    g_map.small = mmap(0, SMALL*OVERHEAD*page_size,FLAG_PROT, FLAG_MAP,-1, 0);
-    if (g_map.small == MAP_FAILED || g_map.tiny == MAP_FAILED)
-        return (-1);
-    ((t_blockheader *)(g_map.tiny))->size = 0;
-    ((t_blockheader *)(g_map.tiny))->allocated = 1;
-    ((t_blockfooter *)(g_map.tiny + sizeof(t_blockheader)))->size = 0;
-    ((t_blockheader *)(g_map.small))->size = 0;
-    ((t_blockheader *)(g_map.small))->allocated = 1;
-    ((t_blockfooter *)(g_map.small + sizeof(t_blockheader)))->size = 0;
-    g_map.tiny_size = TINY*OVERHEAD*page_size - OVERHEAD;
-    g_map.small_size = SMALL*OVERHEAD*page_size - OVERHEAD;
-    g_map.extend_tiny = OVERHEAD + g_map.tiny;
-    g_map.extend_small = OVERHEAD + g_map.small;
-    // printf("TINY:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.tiny))->size, \
-    ((t_blockheader*)(g_map.tiny))->allocated, ((t_blockfooter*)(g_map.tiny + sizeof(t_blockheader)))->size);
-    // printf("SMALL:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.small))->size, \
-    ((t_blockheader*)(g_map.small))->allocated, ((t_blockfooter*)(g_map.tiny + sizeof(t_blockheader)))->size);
-    // printf("tiny was :%zu il reste:%zu\n", TINY*OVERHEAD*page_size, g_map.tiny_size);
-    // printf("small was :%zu il reste:%zu\n", SMALL*OVERHEAD*page_size, g_map.small_size);
-    return (0);
-}
-
 void		*extend(size_t new_size, void *block_ptr, char size_flag)
 {
 	void	*ret_addr;
 
+	if (((t_blockfooter *)(block_ptr - sizeof(t_blockfooter)))->filler != OVER)
+	{
+		ft_putstr_fd("Your program got an overflow...\n", 2);
+		return(NULL);
+	}
+	else
+		printf("euh:%d - MAIGC:%d\n", ((t_blockfooter *)(block_ptr - sizeof(t_blockfooter)))->filler, OVER);
 	ret_addr = block_ptr + sizeof(t_blockheader);
 	((t_blockheader *)(block_ptr))->size = new_size;
     ((t_blockheader *)(block_ptr))->allocated = 1;
     ((t_blockfooter *)(block_ptr + sizeof(t_blockheader) + new_size))->size = new_size;
+	((t_blockfooter *)(block_ptr + sizeof(t_blockheader) + new_size))->filler = OVER;
     if (size_flag == 1)
     {
 		    // printf("[TINY/%llx]:size:%zu\tallocated:%hhd\tfooter:%zu\n", block_ptr, ((t_blockheader*)(block_ptr))->size, \
@@ -135,6 +114,11 @@ void		*find_non_allocated_space(size_t size)
 	}
 	while (counter)
 	{
+		if (((t_blockfooter *)(ptr - sizeof(t_blockheader)))->filler != OVER)
+		{
+			ft_putstr_fd("Your program got an overflow...\n", 2);
+			return(NULL);
+		}
 		if (((t_blockheader *)(ptr))->allocated == 0 \
 			&& (size == ((t_blockheader *)(ptr))->size \
 			|| (size < ((t_blockheader *)(ptr))->size - OVERHEAD*2)))

@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 15:14:00 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/12 18:47:33 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/13 19:23:23 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # define FLAG_PROT PROT_READ | PROT_WRITE
 # define FLAG_MAP  MAP_ANON | MAP_PRIVATE
 # define OVERHEAD (sizeof(t_blockheader) + sizeof(t_blockfooter))
+# define OVER		0x12345678
 
 typedef struct	s_blockheader
 {
