@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/10 17:04:38 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/12 22:02:27 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/14 18:56:29 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ static	int				count_digit(unsigned long long nbr, int base)
 	}
 	return (i);
 }
-
-#include <stdio.h>
 
 void					ft_ulltoa_hex(unsigned long long nbr)
 {
@@ -53,6 +51,5 @@ void					ft_ulltoa_hex(unsigned long long nbr)
 		nbr /= 16;
 		size--;
 	}
-	// ft_putstr("0x");
 	ft_putstr(ret);
 }
