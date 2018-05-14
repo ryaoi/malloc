@@ -22,7 +22,7 @@
 # include "./libft/libft.h"
 
 # define TINY 128
-# define SMALL 4096
+# define SMALL 2048
 # define FLAG_PROT PROT_READ | PROT_WRITE
 # define FLAG_MAP  MAP_ANON | MAP_PRIVATE
 # define OVERHEAD (sizeof(t_blockheader) + sizeof(t_blockfooter))

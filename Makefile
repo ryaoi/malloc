@@ -14,46 +14,48 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
+NAME		= 	libft_malloc_$(HOSTTYPE).so
+
+LINK		=	libft_malloc.so
+
+DIR_LIB	= libft
+
+LIBFT	= $(DIR_LIB)/libft.a
+
 SRCS		= 	free.c \
 				malloc.c \
 				realloc.c \
 				block.c \
 				show_alloc_mem.c 
 
-PATH_OBJ	= obj
-PATH_SRC	= src
-PATH_INC	= inc
+OBJ		= $(SRCS:.c=.o)
 
-PATH_LIB	= libft
+INCLUDE	= -I./inc/filler.h \
+		  -I./libft/libft.h
 
-LIBFT	= $(PATH_LIB)/libft.a
+CC		= gcc
 
-NAME		= libft_malloc_$(HOSTTYPE).so
-CFLAGS		= 
-OTHERFLAGS	= -shared -fPIC
-OBJECTS		= $(patsubst %.c, $(PATH_OBJ)/%.o, $(SRCS))
+CFLAGS	= -Wall -Wextra -Werror
 
-
-	
 all: $(NAME)
 
-$(LIBFT):
-	make -C $(PATH_LIB)
-	
-$(NAME): $(LIBFT) $(OBJECTS)
-	@gcc $(OTHERLFLAGS) -o $@ $(OBJECTS) ./libft/libft.a
-	@rm -f libft_malloc.so
-	@ln -s $(NAME) libft_malloc.so
+%.o:%.c
+	$(CC) -I./$(INCLUDE) -o $@ -c $<
 
-$(PATH_OBJ)/%.o: $(addprefix $(PATH_SRC)/,%.c)
-	@mkdir -p $(PATH_OBJ)
-	$(CC) -c -o $@ $(CFLAGS) $^  -I $(PATH_INC)/ $(PATH_LIB)/ ./libft/libft.a
+$(LIBFT):
+	make -C -j $(DIR_LIB)
+
+$(NAME): $(LIBFT) $(OBJ)
+	$(CC) -shared -o $(NAME) ./libft/libft.a $(OBJ) $(INCLUDE) 
+	@rm -f $(LINK)
+	@ln -s  $(NAME) $(LINK)
 
 clean:
-	@rm -f $(OBJECTS)
+	make clean -C $(DIR_LIB)
+	rm -rf $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
-	rm -f libft_malloc.so
+	make fclean -C $(DIR_LIB)
+	rm -rf $(NAME)
 
-re: fclean $(NAME)
+re: fclean all
