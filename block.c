@@ -12,8 +12,6 @@
 
 #include "malloc.h"
 
-#include <stdio.h>
-
 extern t_map g_map;
 
 int mm_init()

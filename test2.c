@@ -1,5 +1,3 @@
-#include "../libmalloc/inc/malloc.h"
-
 int main()
 {
 	int i;

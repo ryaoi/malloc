@@ -1,4 +1,4 @@
-#include "../libmalloc/inc/malloc.h"
+#include "./inc/malloc.h"
 
 int main()
 {
@@ -7,6 +7,6 @@ int main()
 	malloc(1024 * 1024);
 	malloc(1024 * 1024 * 16);
 	malloc(1024 * 1024 * 128);
-	show_alloc_mem();
+	show_alloc_mem_ex();
 	return (0);
 }

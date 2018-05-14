@@ -35,7 +35,7 @@ INCLUDE	= -I./inc/filler.h \
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -fsanitize=address
 
 all: $(NAME)
 
@@ -43,7 +43,7 @@ all: $(NAME)
 	$(CC) -I./$(INCLUDE) -o $@ -c $<
 
 $(LIBFT):
-	make -C -j $(DIR_LIB)
+	make -C $(DIR_LIB)
 
 $(NAME): $(LIBFT) $(OBJ)
 	$(CC) -shared -o $(NAME) ./libft/libft.a $(OBJ) $(INCLUDE) 

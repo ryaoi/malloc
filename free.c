@@ -53,14 +53,16 @@ void		ft_merge_prev(void *header_ptr)
 	sizeof(t_blockheader)))->size = new_size;
 }
 
-void		ft_free(void *ptr)
+void		free(void *ptr)
 {
 	void	*next_b;
 	void	*prev_b;
 	void	*header_ptr;
 
+	ft_putstr_fd("[FREE]entered\n", 1);
 	if (ptr == NULL)
 		return ;
+	//check if its the valid pointer!
 	header_ptr = ptr - sizeof(t_blockheader);
 	((t_blockheader *)(header_ptr))->allocated = 0;
 	next_b = next_block(header_ptr);
@@ -74,4 +76,5 @@ void		ft_free(void *ptr)
 	else if (((t_blockheader *)(prev_b))->allocated == 0 \
 	&& ((t_blockheader *)(next_b))->allocated == 1  && ((t_blockheader *)(prev_b))->size != 0)
 		ft_merge_prev(header_ptr);
+	ft_putstr_fd("[FREE]exit\n", 1);
 }

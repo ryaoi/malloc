@@ -25,7 +25,7 @@ void		*extend(size_t new_size, void *block_ptr, char size_flag)
 		return(NULL);
 	}
 	else
-		printf("euh:%d - MAIGC:%d\n", ((t_blockfooter *)(block_ptr - sizeof(t_blockfooter)))->filler, OVER);
+		// printf("euh:%d - MAIGC:%d\n", ((t_blockfooter *)(block_ptr - sizeof(t_blockfooter)))->filler, OVER);
 	ret_addr = block_ptr + sizeof(t_blockheader);
 	((t_blockheader *)(block_ptr))->size = new_size;
     ((t_blockheader *)(block_ptr))->allocated = 1;
@@ -50,7 +50,7 @@ void		*extend(size_t new_size, void *block_ptr, char size_flag)
 		// printf("new place:%llu\n", g_map.extend_small);
 		g_map.small_count += 1;
     }
-	printf("ret_addr:%llx\n", ret_addr);
+	// printf("ret_addr:%llx\n", ret_addr);
     return (ret_addr);
 }
 
@@ -69,7 +69,7 @@ void        *largalloc(size_t new_size)
 		((t_blockheader *)(g_map.large))->size = new_size;
 		((t_blockheader *)(g_map.large))->allocated = 1;
 		((t_blockfooter *)(g_map.large + align - sizeof(t_blockfooter)))->size = align;
-		printf("[ADDD]:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.large))->size, \
+		// printf("[ADDD]:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.large))->size, \
 		((t_blockheader*)(g_map.large))->allocated, ((t_blockfooter*)(g_map.large + align - sizeof(t_blockfooter)))->size);
 		g_map.extend_large = g_map.large + align;
 	}
@@ -83,7 +83,7 @@ void        *largalloc(size_t new_size)
 		((t_blockheader *)(g_map.extend_large))->size = new_size;
 		((t_blockheader *)(g_map.extend_large))->allocated = 1;
 		((t_blockfooter *)(g_map.extend_large + align - sizeof(t_blockfooter)))->size = align;
-		printf("[ADDD]:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.extend_large))->size, \
+		// printf("[ADDD]:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.extend_large))->size, \
 		((t_blockheader*)(g_map.extend_large))->allocated, ((t_blockfooter*)(g_map.extend_large + align - sizeof(t_blockfooter)))->size);
 		// printf("check upper footer!:%zu\n", ((t_blockfooter*)(g_map.extend_large - sizeof(t_blockfooter)))->size);
 		g_map.extend_large = g_map.extend_large + align;
@@ -133,20 +133,26 @@ void		*find_non_allocated_space(size_t size)
 }
 
 
-void		*ft_malloc(size_t size)
+void		*malloc(size_t size)
 {
 	void	*ret_ptr;
 
-	pthread_mutex_lock(&lock);
+	// pthread_mutex_lock(&lock);
+	ft_putstr_fd("[MALLOC]entered\n", 1);
 	ret_ptr = NULL;
 	if (g_map.page_size == 0)
     {
 		if (mm_init() == -1)
 			return (NULL);
     }
+	ft_putstr_fd("[MALLOC][size:", 1);
+	ft_ulltoa_hex((unsigned long long)size);
+	ft_putstr_fd("]\n", 1);
+	if(size == 0)
+		return (NULL);
     if ((ret_ptr = find_non_allocated_space(size)))
 	{
-		pthread_mutex_unlock(&lock);
+		// pthread_mutex_unlock(&lock);
         return(ret_ptr);
 	}
 	if (size <= TINY && g_map.small_size > size)
@@ -155,6 +161,6 @@ void		*ft_malloc(size_t size)
         ret_ptr = extend(size, g_map.extend_small, 2);
     else
         ret_ptr = largalloc(size);
-	pthread_mutex_unlock(&lock);
+	ft_putstr_fd("[MALLOC]returned\n", 1);
 	return (ret_ptr);	
 }

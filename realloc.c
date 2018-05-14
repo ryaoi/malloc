@@ -15,24 +15,25 @@
 extern	t_map			g_map;
 extern	pthread_mutex_t	lock;
 
-void					*ft_realloc(void *ptr, size_t size)
+void					*realloc(void *ptr, size_t size)
 {
 	void				*header_ptr;
 	void				*ret_ptr;
 
-	pthread_mutex_lock(&lock);
+	// pthread_mutex_lock(&lock);
+	ft_putstr_fd("[REALLOC]entered\n", 1);
 	if (g_map.page_size == 0)
 	{
 		if (mm_init() == -1)
 			return (NULL);
 	}
 	if (ptr == NULL)
-		return (ft_malloc(size));
+		return (malloc(size));
 	header_ptr = ptr - sizeof(t_blockheader);
 	((t_blockheader *)(header_ptr))->allocated = 0;
 	if ((ret_ptr = find_non_allocated_space(size)))
 	{
-		pthread_mutex_unlock(&lock);
+		// pthread_mutex_unlock(&lock);
 		ft_memcpy(ret_ptr, ptr, ((t_blockheader *)(header_ptr))->size);
 		return (ret_ptr);
 	}
@@ -43,6 +44,6 @@ void					*ft_realloc(void *ptr, size_t size)
 	else
 		ret_ptr = (void *)largalloc(size);
 	ret_ptr = ft_memcpy(ret_ptr, ptr, ((t_blockheader *)(header_ptr))->size);
-	pthread_mutex_unlock(&lock);
+	// pthread_mutex_unlock(&lock);
 	return (ret_ptr);
 }

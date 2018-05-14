@@ -49,7 +49,7 @@ static void	ft_print_range(void *ptr, int ex)
 static void ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
 {
 	void 	*ptr;
-	size_t	align;
+	unsigned long	align;
 
 	if (mode == 1)
 		ptr = start_ptr + OVERHEAD;
@@ -57,6 +57,7 @@ static void ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
 		ptr = start_ptr;
 	while (counter > 0)
 	{
+		// printf("counter:%d, align:%llu\n", counter, align);
 		ft_print_range(ptr, ex);
 		if (mode == 1)
 			ptr += ((t_blockheader *)(ptr))->size + OVERHEAD;
