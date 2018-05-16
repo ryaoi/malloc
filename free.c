@@ -53,16 +53,50 @@ void		ft_merge_prev(void *header_ptr)
 	sizeof(t_blockheader)))->size = new_size;
 }
 
+int			safe_pointer(void *ptr)
+{
+	size_t	counter;
+	void	*ptr_malloc;
+
+
+	ptr_malloc = g_map.tiny + OVERHEAD;
+	counter = g_map.tiny_count;
+	while(counter > 0)
+	{
+		if (ptr_malloc == ptr)
+			return(1);
+		ptr_malloc = next_block(ptr_malloc);
+		counter--;
+	}
+	ptr = g_map.small + OVERHEAD;
+	counter = g_map.small_count;
+	while(counter > 0)
+	{
+		if (ptr_malloc == ptr)
+			return(1);
+		ptr_malloc = next_block(ptr_malloc);
+		counter--;
+	}
+	ptr = g_map.large;
+	counter = g_map.large_count;
+	while(counter > 0)
+	{
+		if (ptr_malloc == ptr)
+			return(1);
+		ptr_malloc = next_block(ptr_malloc);
+		counter--;
+	}
+	return (0);
+}
+
 void		free(void *ptr)
 {
 	void	*next_b;
 	void	*prev_b;
 	void	*header_ptr;
 
-	ft_putstr_fd("[FREE]entered\n", 1);
-	if (ptr == NULL)
+	if (ptr == NULL || safe_pointer(ptr) == 0)
 		return ;
-	//check if its the valid pointer!
 	header_ptr = ptr - sizeof(t_blockheader);
 	((t_blockheader *)(header_ptr))->allocated = 0;
 	next_b = next_block(header_ptr);
@@ -76,5 +110,4 @@ void		free(void *ptr)
 	else if (((t_blockheader *)(prev_b))->allocated == 0 \
 	&& ((t_blockheader *)(next_b))->allocated == 1  && ((t_blockheader *)(prev_b))->size != 0)
 		ft_merge_prev(header_ptr);
-	ft_putstr_fd("[FREE]exit\n", 1);
 }

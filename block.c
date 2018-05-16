@@ -36,25 +36,20 @@ int mm_init()
     g_map.small_size = SMALL*OVERHEAD*page_size - OVERHEAD;
     g_map.extend_tiny = OVERHEAD + g_map.tiny;
     g_map.extend_small = OVERHEAD + g_map.small;
-    // printf("TINY:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.tiny))->size, \
-    ((t_blockheader*)(g_map.tiny))->allocated, ((t_blockfooter*)(g_map.tiny + sizeof(t_blockheader)))->size);
-    // printf("SMALL:size:%zu\tallocated:%hhd\tfooter:%zu\n", ((t_blockheader*)(g_map.small))->size, \
-    ((t_blockheader*)(g_map.small))->allocated, ((t_blockfooter*)(g_map.tiny + sizeof(t_blockheader)))->size);
-    // printf("tiny was :%zu il reste:%zu\n", TINY*OVERHEAD*page_size, g_map.tiny_size);
-    // printf("small was :%zu il reste:%zu\n", SMALL*OVERHEAD*page_size, g_map.small_size);
     return (0);
 }
 
 void		*next_block(void *ptr)
 {
 	size_t	get_size;
+
 	
 	get_size = ((t_blockheader *)(ptr))->size;
 	if (get_size > SMALL)
 	{
 		get_size = (((get_size + OVERHEAD)\
 				+ (g_map.page_size - 1)) & ~ (g_map.page_size - 1));
-		return (ptr + get_size);
+		return ((void *)(((t_blockfooter *)(ptr + get_size- sizeof(t_blockfooter)))->size));
 	}
 	return (ptr + get_size + OVERHEAD);
 }

@@ -14,18 +14,19 @@
 
 extern t_map g_map;
 
-static void ft_print_address(void *ptr, int newline)
+static void 		ft_print_address(void *ptr, int newline)
 {
 	if (ptr == NULL)
 		ft_putstr_fd("0\n", 1);
 	else
 	{
+		ft_putstr_fd("0x", 1);
 		ft_ulltoa_hex((unsigned long long)ptr);
 		if (newline == 1)
 			ft_putchar_fd('\n', 1);
 	}
 }
-static void	ft_print_range(void *ptr, int ex)
+static void			ft_print_range(void *ptr, int ex)
 {
 	if (ex)
 	{
@@ -46,9 +47,10 @@ static void	ft_print_range(void *ptr, int ex)
 	if (ex)
 		ft_hexdump(ptr + sizeof(t_blockheader), ((t_blockheader *)(ptr))->size);
 }
-static void ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
+
+static void 		ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
 {
-	void 	*ptr;
+	void 			*ptr;
 	unsigned long	align;
 
 	if (mode == 1)
@@ -57,21 +59,13 @@ static void ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
 		ptr = start_ptr;
 	while (counter > 0)
 	{
-		// printf("counter:%d, align:%llu\n", counter, align);
 		ft_print_range(ptr, ex);
-		if (mode == 1)
-			ptr += ((t_blockheader *)(ptr))->size + OVERHEAD;
-		else
-		{
-			align = (((((t_blockheader *)(ptr))->size + OVERHEAD)\
-				+ (g_map.page_size - 1)) & ~ (g_map.page_size - 1));
-			ptr += align;
-		}
+		ptr = next_block(ptr);
 		counter--;
 	}
 }
 
-void 		show_alloc_mem()
+void 				show_alloc_mem()
 {
 	ft_putstr_fd("TINY : 0x", 1);
 	ft_print_address(g_map.tiny, 1);
@@ -84,7 +78,7 @@ void 		show_alloc_mem()
 	ft_show_block(g_map.large, 2, g_map.large_count, 0);
 }
 
-void		show_alloc_mem_ex()
+void				show_alloc_mem_ex()
 {
 	ft_putstr_fd("TINY : 0x", 1);
 	ft_print_address(g_map.tiny, 1);

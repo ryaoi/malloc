@@ -68,5 +68,6 @@ void		create_block(void *ptr, size_t size);
 void		*extend(size_t new_size, void *block_ptr, char size_flag);
 void		*find_non_allocated_space(size_t size);
 void        *largalloc(size_t new_size);
+int			safe_pointer(void *ptr);
 
 #endif
