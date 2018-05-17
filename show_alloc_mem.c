@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 19:26:06 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/13 19:05:00 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/17 19:09:17 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern t_map g_map;
 
-static void 		ft_print_address(void *ptr, int newline)
+static	void		ft_print_address(void *ptr, int newline)
 {
 	if (ptr == NULL)
 		ft_putstr_fd("0\n", 1);
@@ -26,6 +26,7 @@ static void 		ft_print_address(void *ptr, int newline)
 			ft_putchar_fd('\n', 1);
 	}
 }
+
 static void			ft_print_range(void *ptr, int ex)
 {
 	if (ex)
@@ -39,18 +40,20 @@ static void			ft_print_range(void *ptr, int ex)
 	{
 		ft_print_address(ptr + sizeof(t_blockheader), 0);
 		ft_putstr_fd(" - ", 1);
-		ft_print_address(ptr + ((t_blockheader *)(ptr))->size + sizeof(t_blockheader), 0);
+		ft_print_address(ptr + ((t_blockheader *)\
+		(ptr))->size + sizeof(t_blockheader), 0);
 		ft_putstr_fd(" : ", 1);
 		ft_putnbr(((t_blockheader *)(ptr))->size);
-		ft_putstr_fd(" Bytes\n", 1);	
+		ft_putstr_fd(" Bytes\n", 1);
 	}
 	if (ex)
 		ft_hexdump(ptr + sizeof(t_blockheader), ((t_blockheader *)(ptr))->size);
 }
 
-static void 		ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
+static	void		ft_show_block(void *start_ptr, \
+								int mode, size_t counter, int ex)
 {
-	void 			*ptr;
+	void			*ptr;
 	unsigned long	align;
 
 	if (mode == 1)
@@ -65,7 +68,7 @@ static void 		ft_show_block(void *start_ptr, int mode, size_t counter, int ex)
 	}
 }
 
-void 				show_alloc_mem()
+void				show_alloc_mem(void)
 {
 	ft_putstr_fd("TINY : 0x", 1);
 	ft_print_address(g_map.tiny, 1);
@@ -78,7 +81,7 @@ void 				show_alloc_mem()
 	ft_show_block(g_map.large, 2, g_map.large_count, 0);
 }
 
-void				show_alloc_mem_ex()
+void				show_alloc_mem_ex(void)
 {
 	ft_putstr_fd("TINY : 0x", 1);
 	ft_print_address(g_map.tiny, 1);
