@@ -37,10 +37,10 @@ void					ft_ulltoa_hex(unsigned long long nbr)
 
 	array = "0123456789ABCDEF";
 	ft_bzero(ret, 30);
-	if (nbr == 0)
+	if (nbr < 16)
 	{
-		ret[0] = '0';
-		ret[1] = '0';
+		ret[0] = array[nbr % 16];
+		ft_putstr("0");
 		ft_putstr(ret);
 		return ;
 	}

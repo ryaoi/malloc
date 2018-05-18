@@ -50,8 +50,7 @@ void		*next_block(void *ptr)
 	{
 		get_size = (((get_size + OVERHEAD)\
 				+ (g_map.page_size - 1)) & ~(g_map.page_size - 1));
-		return ((void *)(((t_blockfooter *)(ptr + get_size - \
-				sizeof(t_blockfooter)))->size));
+		return ((void *)(((t_blockfooter *)(ptr + get_size - sizeof(t_blockfooter)))->size));
 	}
 	return (ptr + get_size + OVERHEAD);
 }
@@ -78,6 +77,7 @@ void		create_block(void *ptr, size_t size)
 	((t_blockheader *)(ptr))->size = size;
 	((t_blockheader *)(ptr))->allocated = 1;
 	((t_blockfooter *)(ptr + sizeof(t_blockheader) + size))->size = size;
+	((t_blockfooter *)(ptr + sizeof(t_blockheader) + size))->filler = OVER;
 	if (old_size != size)
 	{
 		((t_blockheader *)(ptr + OVERHEAD + size))->size = left_size;

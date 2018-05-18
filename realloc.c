@@ -21,21 +21,21 @@ void					*realloc(void *ptr, size_t size)
 	void				*ret_ptr;
 
 	// pthread_mutex_lock(&lock);
-	// ft_putstr_fd("[REALLOC]entered\n", 1);
-	// ft_putstr_fd("[REALLOC]size:0x", 1);
-	// ft_ulltoa_hex(size);
-	// ft_putstr_fd("\n[REALLOC]ptr:", 1);
-	// ft_ulltoa_hex((unsigned long long)ptr);
-	// ft_putstr_fd("\n", 1);
 	if (g_map.page_size == 0)
 	{
 		if (mm_init() == -1)
 			return (NULL);
 	}
 	if (ptr == NULL)
+	{
+		// pthread_mutex_unlock(&lock);
 		return (malloc(size));
+	}
 	if (safe_pointer(ptr) == 0)
+	{
+		// pthread_mutex_unlock(&lock);
 		return (NULL);
+	}
 	header_ptr = ptr - sizeof(t_blockheader);
 	((t_blockheader *)(header_ptr))->allocated = 0;
 	if ((ret_ptr = find_non_allocated_space(size)))

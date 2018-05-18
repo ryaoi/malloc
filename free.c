@@ -27,6 +27,8 @@ void		ft_merge_double(void *header_ptr)
 	((t_blockheader *)(prev_b))->size += new_size;
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
 	sizeof(t_blockheader)))->size = new_size;
+	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
+	sizeof(t_blockheader)))->filler = OVER;
 }
 
 void		ft_merge_next(void *header_ptr)
@@ -39,6 +41,8 @@ void		ft_merge_next(void *header_ptr)
 	((t_blockheader *)(header_ptr))->size += new_size;
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
 	sizeof(t_blockheader)))->size = new_size;
+	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
+	sizeof(t_blockheader)))->filler = OVER;
 }
 
 void		ft_merge_prev(void *header_ptr)
@@ -51,6 +55,8 @@ void		ft_merge_prev(void *header_ptr)
 	((t_blockheader *)(prev_b))->size += new_size;
 	((t_blockfooter *)(header_ptr + ((t_blockheader *)(header_ptr))->size + \
 	sizeof(t_blockheader)))->size = new_size;
+	((t_blockfooter *)(header_ptr + ((t_blockheader *)(header_ptr))->size + \
+	sizeof(t_blockheader)))->filler = OVER;
 }
 
 int			safe_pointer(void *ptr)
@@ -62,25 +68,25 @@ int			safe_pointer(void *ptr)
 	counter = g_map.tiny_count;
 	while (counter > 0)
 	{
-		if (ptr_malloc == ptr)
+		if (ptr_malloc + sizeof(t_blockheader) == ptr)
 			return (1);
 		ptr_malloc = next_block(ptr_malloc);
 		counter--;
 	}
-	ptr = g_map.small + OVERHEAD;
+	ptr_malloc = g_map.small + OVERHEAD;
 	counter = g_map.small_count;
 	while (counter > 0)
 	{
-		if (ptr_malloc == ptr)
+		if (ptr_malloc + sizeof(t_blockheader) == ptr)
 			return (1);
 		ptr_malloc = next_block(ptr_malloc);
 		counter--;
 	}
-	ptr = g_map.large;
+	ptr_malloc = g_map.large;
 	counter = g_map.large_count;
 	while (counter > 0)
 	{
-		if (ptr_malloc == ptr)
+		if (ptr_malloc + sizeof(t_blockheader) == ptr)
 			return (1);
 		ptr_malloc = next_block(ptr_malloc);
 		counter--;

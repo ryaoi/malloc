@@ -59,7 +59,7 @@ void        *largalloc(size_t new_size)
 	size_t	align;
 	void	*ret_addr;
 
-	align = (((new_size + OVERHEAD) + (g_map.page_size - 1)) & ~ (g_map.page_size - 1));
+	align = (((new_size + OVERHEAD) + (g_map.page_size - 1)) & ~(g_map.page_size - 1));
 	if (g_map.large == NULL)
 	{
 		g_map.large = mmap(0, align, FLAG_PROT, FLAG_MAP, -1, 0);
@@ -115,7 +115,7 @@ void		*find_non_allocated_space(size_t size)
 		}
 		if (((t_blockheader *)(ptr))->allocated == 0 \
 			&& (size == ((t_blockheader *)(ptr))->size \
-			|| (size < ((t_blockheader *)(ptr))->size - OVERHEAD*2)))
+			|| ((size < ((t_blockheader *)(ptr))->size - OVERHEAD * 2) && (size <= SMALL))))
 		{
 			create_block(ptr, size);
 			return (ptr + sizeof(t_blockheader));
