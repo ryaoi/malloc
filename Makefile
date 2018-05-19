@@ -6,7 +6,7 @@
 #    By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 18:49:54 by ryaoi             #+#    #+#              #
-#    Updated: 2018/05/14 19:03:47 by ryaoi            ###   ########.fr        #
+#    Updated: 2018/05/19 14:05:18 by ryaoi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,9 @@ SRCS		= 	free.c \
 				malloc.c \
 				realloc.c \
 				block.c \
-				show_alloc_mem.c 
+				show_alloc_mem.c \
+				safe_pointer.c \
+				find_non_allocated_space.c
 
 OBJ		= $(SRCS:.c=.o)
 
@@ -35,7 +37,7 @@ INCLUDE	= -I./inc/filler.h \
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -lpthread
 
 all: $(NAME)
 

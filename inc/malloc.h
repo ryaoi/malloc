@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 15:14:00 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/14 18:57:27 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/19 13:20:35 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 typedef struct	s_blockheader
 {
-    size_t		size;
+	size_t		size;
 	char		allocated;
 }				t_blockheader;
 
@@ -40,7 +40,7 @@ typedef struct	s_blockfooter
 	int			filler;
 }				t_blockfooter;
 
-typedef struct 	map_s
+typedef struct	s_map
 {
 	void		*tiny;
 	void		*small;
@@ -56,18 +56,18 @@ typedef struct 	map_s
 	size_t		large_count;
 }				t_map;
 
-void		ft_free(void *ptr);
-void		*ft_malloc(size_t size);
-void        *ft_realloc(void *ptr, size_t size);
-void		show_alloc_mem(void);
-void 		show_alloc_mem_ex(void);
-int			mm_init(void);
-void		*next_block(void *ptr);
-void		*prev_block(void *ptr);
-void		create_block(void *ptr, size_t size);
-void		*extend(size_t new_size, void *block_ptr, char size_flag);
-void		*find_non_allocated_space(size_t size);
-void        *largalloc(size_t new_size);
-int			safe_pointer(void *ptr);
+void			ft_free(void *ptr);
+void			*ft_malloc(size_t size);
+void			*ft_realloc(void *ptr, size_t size);
+void			show_alloc_mem(void);
+void			show_alloc_mem_ex(void);
+int				mm_init(void);
+void			*next_block(void *ptr);
+void			*prev_block(void *ptr);
+void			create_block(void *ptr, size_t size);
+void			*extend(size_t new_size, void *block_ptr, char size_flag);
+void			*find_non_allocated_space(size_t size);
+void			*largalloc(size_t new_size);
+int				safe_pointer(void *ptr);
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:12:55 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/17 19:02:59 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/19 13:36:42 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include "./inc/malloc.h"
 
 extern t_map g_map;
 
@@ -50,7 +50,8 @@ void		*next_block(void *ptr)
 	{
 		get_size = (((get_size + OVERHEAD)\
 				+ (g_map.page_size - 1)) & ~(g_map.page_size - 1));
-		return ((void *)(((t_blockfooter *)(ptr + get_size - sizeof(t_blockfooter)))->size));
+		return ((void *)(((t_blockfooter *)\
+		(ptr + get_size - sizeof(t_blockfooter)))->size));
 	}
 	return (ptr + get_size + OVERHEAD);
 }

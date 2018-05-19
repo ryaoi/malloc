@@ -6,13 +6,14 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:36:04 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/17 19:05:41 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/19 13:36:31 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include "./inc/malloc.h"
 
 extern t_map g_map;
+extern pthread_mutex_t g_lock;
 
 void		ft_merge_double(void *header_ptr)
 {
@@ -59,51 +60,11 @@ void		ft_merge_prev(void *header_ptr)
 	sizeof(t_blockheader)))->filler = OVER;
 }
 
-int			safe_pointer(void *ptr)
-{
-	size_t	counter;
-	void	*ptr_malloc;
-
-	ptr_malloc = g_map.tiny + OVERHEAD;
-	counter = g_map.tiny_count;
-	while (counter > 0)
-	{
-		if (ptr_malloc + sizeof(t_blockheader) == ptr)
-			return (1);
-		ptr_malloc = next_block(ptr_malloc);
-		counter--;
-	}
-	ptr_malloc = g_map.small + OVERHEAD;
-	counter = g_map.small_count;
-	while (counter > 0)
-	{
-		if (ptr_malloc + sizeof(t_blockheader) == ptr)
-			return (1);
-		ptr_malloc = next_block(ptr_malloc);
-		counter--;
-	}
-	ptr_malloc = g_map.large;
-	counter = g_map.large_count;
-	while (counter > 0)
-	{
-		if (ptr_malloc + sizeof(t_blockheader) == ptr)
-			return (1);
-		ptr_malloc = next_block(ptr_malloc);
-		counter--;
-	}
-	return (0);
-}
-
-void		free(void *ptr)
+static void	ft_defragmentation(void *header_ptr)
 {
 	void	*next_b;
 	void	*prev_b;
-	void	*header_ptr;
 
-	if (ptr == NULL || safe_pointer(ptr) == 0)
-		return ;
-	header_ptr = ptr - sizeof(t_blockheader);
-	((t_blockheader *)(header_ptr))->allocated = 0;
 	next_b = next_block(header_ptr);
 	prev_b = prev_block(header_ptr);
 	if (((t_blockheader *)(prev_b))->allocated == 0 \
@@ -117,4 +78,21 @@ void		free(void *ptr)
 	&& ((t_blockheader *)(next_b))->allocated == 1 \
 	&& ((t_blockheader *)(prev_b))->size != 0)
 		ft_merge_prev(header_ptr);
+}
+
+void		free(void *ptr)
+{
+	void	*header_ptr;
+
+	pthread_mutex_lock(&g_lock);
+	if (ptr == NULL || safe_pointer(ptr) == 0)
+	{
+		pthread_mutex_unlock(&g_lock);
+		return ;
+	}
+	header_ptr = ptr - sizeof(t_blockheader);
+	((t_blockheader *)(header_ptr))->allocated = 0;
+	if (((t_blockheader *)(header_ptr))->size <= SMALL)
+		ft_defragmentation(header_ptr);
+	pthread_mutex_unlock(&g_lock);
 }
