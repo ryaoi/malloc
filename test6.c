@@ -11,7 +11,8 @@ int main(){
 	char *test2 = malloc(16);
 	show_alloc_mem_ex();
 	puts("4.+++++++++++++++++++++++++++++");
-	char *test3 = malloc(1);
+	char *test3 = malloc(40000);
+	free(test3);
 	show_alloc_mem_ex();
 	return(0);
 }

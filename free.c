@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:36:04 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/19 13:36:31 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/19 17:15:46 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,74 +15,13 @@
 extern t_map g_map;
 extern pthread_mutex_t g_lock;
 
-void		ft_merge_double(void *header_ptr)
-{
-	void	*next_b;
-	void	*prev_b;
-	size_t	new_size;
-
-	next_b = next_block(header_ptr);
-	prev_b = prev_block(header_ptr);
-	new_size = OVERHEAD * 2 + \
-	((t_blockheader *)(next_b))->size + ((t_blockheader *)(header_ptr))->size;
-	((t_blockheader *)(prev_b))->size += new_size;
-	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
-	sizeof(t_blockheader)))->size = new_size;
-	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
-	sizeof(t_blockheader)))->filler = OVER;
-}
-
-void		ft_merge_next(void *header_ptr)
-{
-	void	*next_b;
-	size_t	new_size;
-
-	next_b = next_block(header_ptr);
-	new_size = OVERHEAD + ((t_blockheader *)(next_b))->size;
-	((t_blockheader *)(header_ptr))->size += new_size;
-	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
-	sizeof(t_blockheader)))->size = new_size;
-	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
-	sizeof(t_blockheader)))->filler = OVER;
-}
-
-void		ft_merge_prev(void *header_ptr)
-{
-	void	*prev_b;
-	size_t	new_size;
-
-	prev_b = prev_block(header_ptr);
-	new_size = OVERHEAD + ((t_blockheader *)(header_ptr))->size;
-	((t_blockheader *)(prev_b))->size += new_size;
-	((t_blockfooter *)(header_ptr + ((t_blockheader *)(header_ptr))->size + \
-	sizeof(t_blockheader)))->size = new_size;
-	((t_blockfooter *)(header_ptr + ((t_blockheader *)(header_ptr))->size + \
-	sizeof(t_blockheader)))->filler = OVER;
-}
-
-static void	ft_defragmentation(void *header_ptr)
-{
-	void	*next_b;
-	void	*prev_b;
-
-	next_b = next_block(header_ptr);
-	prev_b = prev_block(header_ptr);
-	if (((t_blockheader *)(prev_b))->allocated == 0 \
-	&& ((t_blockheader *)(next_b))->allocated == 0)
-		ft_merge_double(header_ptr);
-	else if (((t_blockheader *)(prev_b))->allocated == 1 \
-	&& ((t_blockheader *)(next_b))->allocated == 0 \
-	&& ((t_blockheader *)(next_b))->size != 0)
-		ft_merge_next(header_ptr);
-	else if (((t_blockheader *)(prev_b))->allocated == 0 \
-	&& ((t_blockheader *)(next_b))->allocated == 1 \
-	&& ((t_blockheader *)(prev_b))->size != 0)
-		ft_merge_prev(header_ptr);
-}
-
 void		free(void *ptr)
 {
 	void	*header_ptr;
+	void	*large_ptr;
+	int		munmap_size;
+	int		large_counter;
+	int		size;
 
 	pthread_mutex_lock(&g_lock);
 	if (ptr == NULL || safe_pointer(ptr) == 0)
@@ -93,6 +32,43 @@ void		free(void *ptr)
 	header_ptr = ptr - sizeof(t_blockheader);
 	((t_blockheader *)(header_ptr))->allocated = 0;
 	if (((t_blockheader *)(header_ptr))->size <= SMALL)
-		ft_defragmentation(header_ptr);
+		defragmentation(header_ptr);
+	else
+	{
+		munmap_size = ((t_blockheader *)(header_ptr))->size;
+		large_ptr = g_map.large;
+		if (large_ptr == header_ptr && g_map.large_count > 1)
+		{
+			g_map.large = next_block(g_map.large);
+		}
+		else if (large_ptr == header_ptr && g_map.large_count  == 1)
+			g_map.large = NULL;
+		else
+		{
+			while (large_counter)
+			{
+				if (next_block(large_ptr) == header_ptr)
+				{
+					size = ((((t_blockfooter *)(large_ptr))->size + (g_map.page_size - 1))\
+							& ~(g_map.page_size - 1));
+					if (large_counter > 2)
+					{
+						((t_blockfooter *)(large_ptr + size - sizeof(t_blockfooter)))->size = \
+						(unsigned long long)next_block(next_block(large_ptr));
+						break;
+					}
+					else
+					{
+						((t_blockfooter *)(large_ptr + size - sizeof(t_blockfooter)))->size = 0;
+						break;
+					}
+				}
+				large_ptr = next_block(large_ptr);
+				large_counter--;
+			}	
+		}
+		if (munmap(header_ptr, munmap_size) != -1)
+			g_map.large_count--;
+	}
 	pthread_mutex_unlock(&g_lock);
 }

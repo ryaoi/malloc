@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 15:14:00 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/19 13:20:35 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/19 17:14:31 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,6 @@ void			*extend(size_t new_size, void *block_ptr, char size_flag);
 void			*find_non_allocated_space(size_t size);
 void			*largalloc(size_t new_size);
 int				safe_pointer(void *ptr);
+void	    	defragmentation(void *header_ptr);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 18:49:54 by ryaoi             #+#    #+#              #
-#    Updated: 2018/05/19 14:05:18 by ryaoi            ###   ########.fr        #
+#    Updated: 2018/05/19 17:15:27 by ryaoi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ SRCS		= 	free.c \
 				block.c \
 				show_alloc_mem.c \
 				safe_pointer.c \
-				find_non_allocated_space.c
+				find_non_allocated_space.c \
+				defragmentation.c
 
 OBJ		= $(SRCS:.c=.o)
 
