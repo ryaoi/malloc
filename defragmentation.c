@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 17:13:33 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/19 17:19:28 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/19 17:22:54 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,22 @@ static void	ft_merge_double(void *header_ptr)
 	size_t	new_size;
 
 	next_b = next_block(header_ptr);
-	prev_b = prev_block(header_ptr);
+    prev_b = prev_block(header_ptr);
+    ft_putstr("header size:0x");
+    ft_ulltoa_hex((unsigned long long)((t_blockheader *)(header_ptr))->size);
+    ft_putstr("\n");
+    ft_putstr("prev size:0x");
+    ft_ulltoa_hex((unsigned long long)((t_blockheader *)(prev_b))->size);
+    ft_putstr("\n");
+    ft_putstr("prev size:0x");
+    ft_ulltoa_hex((unsigned long long)((t_blockheader *)(next_b))->size);
+    ft_putstr("\n");
 	new_size = OVERHEAD * 2 + \
 	((t_blockheader *)(next_b))->size + ((t_blockheader *)(header_ptr))->size;
-	((t_blockheader *)(prev_b))->size += new_size;
+    ((t_blockheader *)(prev_b))->size += new_size;
+    ft_putstr("new size:0x");
+    ft_ulltoa_hex((unsigned long long)new_size);
+    ft_putstr("\n");
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
 	sizeof(t_blockheader)))->size = new_size;
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
