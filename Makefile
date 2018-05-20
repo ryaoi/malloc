@@ -6,7 +6,7 @@
 #    By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 18:49:54 by ryaoi             #+#    #+#              #
-#    Updated: 2018/05/20 15:01:28 by ryaoi            ###   ########.fr        #
+#    Updated: 2018/05/20 17:11:24 by ryaoi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,11 @@ SRCS		= 	free.c \
 
 OBJ		= $(SRCS:.c=.o)
 
-INCLUDE	= -I./inc/filler.h \
+INCLUDE	= -I./inc/malloc.h \
 		  -I./libft/libft.h
+
+HEADER  = ./inc/malloc.h \
+		  ./libft/libft.h
 
 CC		= gcc
 
@@ -43,13 +46,13 @@ CFLAGS	= -Wall -Wextra -Werror -lpthread
 
 all: $(NAME)
 
-%.o:%.c
-	$(CC) -I./$(INCLUDE) -o $@ -c $<
+%.o:%.c $(HEADER)
+	$(CC) -I./$(INCLUDE) -o $@ -c $< 
 
 $(LIBFT):
 	make -C $(DIR_LIB)
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(LIBFT) $(OBJ) $(HEADER) 
 	$(CC) -shared -o $(NAME) ./libft/libft.a $(OBJ) $(INCLUDE) 
 	@ln -sf  $(NAME) $(LINK)
 
