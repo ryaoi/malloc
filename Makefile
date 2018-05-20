@@ -6,7 +6,7 @@
 #    By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 18:49:54 by ryaoi             #+#    #+#              #
-#    Updated: 2018/05/19 17:15:27 by ryaoi            ###   ########.fr        #
+#    Updated: 2018/05/20 15:01:28 by ryaoi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ SRCS		= 	free.c \
 				show_alloc_mem.c \
 				safe_pointer.c \
 				find_non_allocated_space.c \
-				defragmentation.c
+				defragmentation.c \
+				calloc.c
 
 OBJ		= $(SRCS:.c=.o)
 
@@ -50,8 +51,7 @@ $(LIBFT):
 
 $(NAME): $(LIBFT) $(OBJ)
 	$(CC) -shared -o $(NAME) ./libft/libft.a $(OBJ) $(INCLUDE) 
-	@rm -f $(LINK)
-	@ln -s  $(NAME) $(LINK)
+	@ln -sf  $(NAME) $(LINK)
 
 clean:
 	make clean -C $(DIR_LIB)

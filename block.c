@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:12:55 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/19 17:25:48 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/20 16:40:02 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,7 @@ void		*prev_block(void *ptr)
 {
 	size_t	get_size;
 
-	get_size = ((t_blockheader *)(ptr - sizeof(t_blockfooter)))->size;
-	ft_putstr("prev_block size:0x");
-    ft_ulltoa_hex((unsigned long long)get_size);
-    ft_putstr("\n");
+	get_size = ((t_blockfooter *)(ptr - sizeof(t_blockfooter)))->size;
 	if (get_size > SMALL)
 	{
 		return (ptr - get_size);

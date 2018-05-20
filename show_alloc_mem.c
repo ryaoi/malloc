@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 19:26:06 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/19 13:12:23 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/20 14:25:18 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,13 @@ static	void		ft_show_block(void *start_ptr, \
 void				show_alloc_mem(void)
 {
 	pthread_mutex_lock(&g_lock);
-	ft_putstr_fd("TINY : 0x", 1);
+	ft_putstr_fd("TINY : ", 1);
 	ft_print_address(g_map.tiny, 1);
 	ft_show_block(g_map.tiny, 1, g_map.tiny_count, 0);
-	ft_putstr_fd("SMALL : 0x", 1);
+	ft_putstr_fd("SMALL : ", 1);
 	ft_print_address(g_map.small, 1);
 	ft_show_block(g_map.small, 1, g_map.small_count, 0);
-	ft_putstr_fd("LARGE : 0x", 1);
+	ft_putstr_fd("LARGE : ", 1);
 	ft_print_address(g_map.large, 1);
 	ft_show_block(g_map.large, 2, g_map.large_count, 0);
 	pthread_mutex_unlock(&g_lock);
@@ -87,13 +87,13 @@ void				show_alloc_mem(void)
 void				show_alloc_mem_ex(void)
 {
 	pthread_mutex_lock(&g_lock);
-	ft_putstr_fd("TINY : 0x", 1);
+	ft_putstr_fd("TINY : ", 1);
 	ft_print_address(g_map.tiny, 1);
 	ft_show_block(g_map.tiny, 1, g_map.tiny_count, 1);
-	ft_putstr_fd("SMALL : 0x", 1);
+	ft_putstr_fd("SMALL : ", 1);
 	ft_print_address(g_map.small, 1);
 	ft_show_block(g_map.small, 1, g_map.small_count, 1);
-	ft_putstr_fd("LARGE : 0x", 1);
+	ft_putstr_fd("LARGE : ", 1);
 	ft_print_address(g_map.large, 1);
 	ft_show_block(g_map.large, 2, g_map.large_count, 1);
 	pthread_mutex_unlock(&g_lock);

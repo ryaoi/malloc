@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 15:14:00 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/19 17:14:31 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/20 16:41:11 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define FLAG_PROT PROT_READ | PROT_WRITE
 # define FLAG_MAP  MAP_ANON | MAP_PRIVATE
 # define OVERHEAD (sizeof(t_blockheader) + sizeof(t_blockfooter))
-# define OVER		0x12345678
+# define OVER		0xBEBAFECA
 
 typedef struct	s_blockheader
 {
@@ -61,6 +61,7 @@ void			*ft_malloc(size_t size);
 void			*ft_realloc(void *ptr, size_t size);
 void			show_alloc_mem(void);
 void			show_alloc_mem_ex(void);
+void			*calloc(size_t count, size_t size);
 int				mm_init(void);
 void			*next_block(void *ptr);
 void			*prev_block(void *ptr);
@@ -69,6 +70,6 @@ void			*extend(size_t new_size, void *block_ptr, char size_flag);
 void			*find_non_allocated_space(size_t size);
 void			*largalloc(size_t new_size);
 int				safe_pointer(void *ptr);
-void	    	defragmentation(void *header_ptr);
+void			defragmentation(void *header_ptr);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 17:13:33 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/19 17:22:54 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/20 16:40:45 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,18 @@ static void	ft_merge_double(void *header_ptr)
 	size_t	new_size;
 
 	next_b = next_block(header_ptr);
-    prev_b = prev_block(header_ptr);
-    ft_putstr("header size:0x");
-    ft_ulltoa_hex((unsigned long long)((t_blockheader *)(header_ptr))->size);
-    ft_putstr("\n");
-    ft_putstr("prev size:0x");
-    ft_ulltoa_hex((unsigned long long)((t_blockheader *)(prev_b))->size);
-    ft_putstr("\n");
-    ft_putstr("prev size:0x");
-    ft_ulltoa_hex((unsigned long long)((t_blockheader *)(next_b))->size);
-    ft_putstr("\n");
+	prev_b = prev_block(header_ptr);
 	new_size = OVERHEAD * 2 + \
 	((t_blockheader *)(next_b))->size + ((t_blockheader *)(header_ptr))->size;
-    ((t_blockheader *)(prev_b))->size += new_size;
-    ft_putstr("new size:0x");
-    ft_ulltoa_hex((unsigned long long)new_size);
-    ft_putstr("\n");
+	((t_blockheader *)(prev_b))->size += new_size;
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
-	sizeof(t_blockheader)))->size = new_size;
+	sizeof(t_blockheader)))->size += new_size;
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
 	sizeof(t_blockheader)))->filler = OVER;
-	// if (((t_blockheader *)(header_ptr))->size <= TINY)
-	// 	g_map.tiny_count -= 2;
-	// else
-	// 	g_map.small_count -= 2;
+	if (((t_blockheader *)(header_ptr))->size <= TINY)
+		g_map.tiny_count -= 2;
+	else
+		g_map.small_count -= 2;
 }
 
 static void	ft_merge_next(void *header_ptr)
@@ -56,7 +44,7 @@ static void	ft_merge_next(void *header_ptr)
 	new_size = OVERHEAD + ((t_blockheader *)(next_b))->size;
 	((t_blockheader *)(header_ptr))->size += new_size;
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
-	sizeof(t_blockheader)))->size = new_size;
+	sizeof(t_blockheader)))->size += new_size;
 	((t_blockfooter *)(next_b + ((t_blockheader *)(next_b))->size + \
 	sizeof(t_blockheader)))->filler = OVER;
 	if (((t_blockheader *)(header_ptr))->size <= TINY)
@@ -74,7 +62,7 @@ static void	ft_merge_prev(void *header_ptr)
 	new_size = OVERHEAD + ((t_blockheader *)(header_ptr))->size;
 	((t_blockheader *)(prev_b))->size += new_size;
 	((t_blockfooter *)(header_ptr + ((t_blockheader *)(header_ptr))->size + \
-	sizeof(t_blockheader)))->size = new_size;
+	sizeof(t_blockheader)))->size += new_size;
 	((t_blockfooter *)(header_ptr + ((t_blockheader *)(header_ptr))->size + \
 	sizeof(t_blockheader)))->filler = OVER;
 	if (((t_blockheader *)(header_ptr))->size <= TINY)
@@ -83,7 +71,7 @@ static void	ft_merge_prev(void *header_ptr)
 		g_map.small_count--;
 }
 
-void	    defragmentation(void *header_ptr)
+void		defragmentation(void *header_ptr)
 {
 	void	*next_b;
 	void	*prev_b;
