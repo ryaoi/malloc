@@ -2,9 +2,9 @@
 
 int main()
 {
-	void *ptr1 = malloc(8000);
-	void *ptr2 = malloc(16000);
-	void *ptr3 = malloc(20000);
+	// void *ptr1 = malloc(8000);
+	// void *ptr2 = malloc(16000);
+	// void *ptr3 = malloc(20000);
 
 	void *ptr4 = malloc(10);
 	void *ptr14 = malloc(10);
@@ -17,16 +17,14 @@ int main()
 
 
 	show_alloc_mem();
-	puts("before free!\n");
-	free(ptr2);
-	free(ptr1);
-	puts("freed!\n");
+	// free(ptr2);
+	// free(ptr1);
 	free(ptr34);
 	free(ptr64);
 	show_alloc_mem();
 	free(ptr44);
-	//show_alloc_mem_ex();
+	show_alloc_mem_ex();
 	free(ptr54);
-	//show_alloc_mem_ex();
+	show_alloc_block();
 	return (0);
 }

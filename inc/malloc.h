@@ -6,7 +6,7 @@
 /*   By: ryaoi <ryaoi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/06 15:14:00 by ryaoi             #+#    #+#             */
-/*   Updated: 2018/05/20 16:41:11 by ryaoi            ###   ########.fr       */
+/*   Updated: 2018/05/26 16:08:47 by ryaoi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void			*ft_malloc(size_t size);
 void			*ft_realloc(void *ptr, size_t size);
 void			show_alloc_mem(void);
 void			show_alloc_mem_ex(void);
+void			show_alloc_block(void);
 void			*calloc(size_t count, size_t size);
 int				mm_init(void);
 void			*next_block(void *ptr);
@@ -71,5 +72,6 @@ void			*find_non_allocated_space(size_t size);
 void			*largalloc(size_t new_size);
 int				safe_pointer(void *ptr);
 void			defragmentation(void *header_ptr);
+void			ft_print_address(void *ptr, int newline);
 
 #endif
